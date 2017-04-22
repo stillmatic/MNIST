@@ -1,0 +1,47 @@
+---
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    fig.width = 3,
+    fig.height = 3,
+    fig.path = "README-"
+)
+library(dplyr)
+```
+
+
+## MNIST Image Data
+
+Chris Hua / `chua@wharton.upenn.edu`
+
+
+## Installation 
+
+```{r, eval = F}
+install.packages("devtools")
+devtools::install_github("stillmatic/MNIST")
+```
+
+## Usage
+
+Data is exported as `MNIST::mnist_train` and `MNIST::mnist_test`.
+
+```{r}
+MNIST::mnist_train %>% str
+```
+
+```{r}
+MNIST::mnist_test %>% str
+```
+
+```{r}
+MNIST::show_digit(MNIST::mnist_train$x[42,])
+```
+
+
+## Notes
+
+Credit belongs to [Yann Lecun](http://yann.lecun.com/exdb/mnist/), etc.
+

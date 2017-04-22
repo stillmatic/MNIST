@@ -1,0 +1,19 @@
+Package: MNIST
+Type: Package
+Title: Exports MNIST data files
+Version: 0.1.0
+Authors@R: c(
+    person("Chris", "Hua", email = "hua.christopher@gmail.com", role = c("aut", "cre"))
+    )
+Description: Contains the core datasets from the MNIST database of handwriting.
+    Useful in machine learning testing.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/stillmatic/MNIST
+BugReports: https://github.com/stillmatic/MNIST/issues
+RoxygenNote: 6.0.1
+Depends: R (>= 2.10)
+Suggests: dplyr,
+    knitr,
+    rmarkdown
