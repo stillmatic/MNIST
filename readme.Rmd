@@ -11,11 +11,9 @@ knitr::opts_chunk$set(
 library(dplyr)
 ```
 
-
 ## MNIST Image Data
 
 Chris Hua / `chua@wharton.upenn.edu`
-
 
 ## Installation 
 
@@ -29,17 +27,16 @@ devtools::install_github("stillmatic/MNIST")
 Data is exported as `MNIST::mnist_train` and `MNIST::mnist_test`.
 
 ```{r}
-MNIST::mnist_train %>% str
+MNIST::mnist_train %>% dim
 ```
 
 ```{r}
-MNIST::mnist_test %>% str
+table(MNIST::mnist_test$y)
 ```
 
 ```{r}
-MNIST::show_digit(MNIST::mnist_train$x[42,])
+MNIST::show_digit(MNIST::mnist_train[42,])
 ```
-
 
 ## Notes
 
