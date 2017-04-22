@@ -13,6 +13,9 @@
 #'
 #' @examples
 #' show_digit(MNIST::mnist_train$x[30,])
+#' show_digit(MNIST::mnist_train$x[30,], sq = 1)
 show_digit <- function(arr784, col=gray(12:1/12), ...) {
+    base_par <- par(pty = "s", no.readonly = T)
     graphics::image(matrix(arr784, nrow=28)[,28:1], col=col, ...)
+    par(base_par)
 }

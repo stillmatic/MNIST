@@ -18,4 +18,5 @@ Works by default for the MNIST objects as established here.
 }
 \examples{
 show_digit(MNIST::mnist_train$x[30,])
+show_digit(MNIST::mnist_train$x[30,], asp = 1)
 }
