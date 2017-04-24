@@ -57,8 +57,9 @@ for (i in 1:1000) {
 }
 ```
 
+Test trained model
+
 ```{r}
-# Test trained model
 correct_prediction <- tf$equal(tf$argmax(y, 1L), tf$argmax(y_, 1L))
 accuracy <- tf$reduce_mean(tf$cast(correct_prediction, tf$float32))
 sess$run(accuracy,

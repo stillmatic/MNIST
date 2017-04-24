@@ -1,0 +1,128 @@
+---
+title: "neuralnet with MNIST"
+author: "Chris Hua"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    fig.width = 3,
+    fig.height = 3,
+    echo = TRUE
+)
+```
+
+## Motivation
+
+The `neuralnet` package is widely used and cited but not documented well at all. There are very few clear guides on using the package, especially with a fully worked example. Here, we do an analysis on the MNIST dataset.
+
+## Setup
+
+Obviously, load our libraries.
+
+```{r}
+library(neuralnet)
+library(MNIST)
+library(dplyr)
+```
+
+Recall the shape of the MNIST data, as a dataframe:
+
+```{r}
+broom::glance(MNIST::mnist_train)
+```
+
+There are 785 variables, as 784 predictors and 1 outcome variable. However, the outcome variable is a factor, which can take on 10 values.
+
+```{r}
+MNIST::mnist_train %>% dplyr::select(y) %>% table
+```
+
+Then, in most other setups, we could setup our training process as:
+
+```{r eval=F}
+nn <- neuralnet(y ~ ., data = MNIST::mnist_train, ...)
+```
+
+There are two problems with this formulation, unfortunately.
+
+First, this factor setup is not supported by the `neuralnet` package, which operates in a matrix framework. To translate this variable into a supported format, we create a class indicator. As you can see, this is basically a one-hot encoded matrix, with a 1 representing which class is denoted. 
+
+```{r}
+inds <- nnet::class.ind(mnist_train$y)
+inds %>% head
+```
+
+The second problem is that we need to explicitly create a formula. The `y ~ .` approach is convenient and used in most other R model training situations but does not work with this package. To work around that, we need to explicitly create a formula. In the process, we change the names of `inds`, because the names are currently just numbers, which formulas in R do not handle. That is, numbers are protected, so we change the names to the form `val0`, `val1`, etc.
+
+Then, we want to predict all the possible `y` values using all the `x` variables. Instead of typing out all of these variables in the formula, we do some R magic to make it simpler.
+
+```{r}
+colnames(inds) <- paste("val", colnames(inds), sep = "")
+f <- as.formula(paste(paste(colnames(inds), collapse = "+"), " ~ ", 
+                      paste(names(MNIST::mnist_train)[1:784], collapse = "+")))
+f
+```
+
+Finally, we can combine the training dataset with the class indicators to create a final matrix.
+
+```{r}
+train <- cbind(MNIST::mnist_train[, 1:784], inds)
+```
+
+## Training
+
+Now, we can train our model! Here, we do the computation with only a small subset of the values, in order to save time.
+
+Note the options which we use in the call to `neuralnet` here:
+
+* `hidden`: This is a number or vector of hidden units to include in the model. For example, you could write `c(3,5)` for two hidden layers, with 3 and 5 units, respectively.
+* `linear.output`: This basically tells `neuralnet` if you want to do regression or classification. In our case we set this value to `FALSE` because we want to classify the handwriting digits.
+
+```{r, cache=TRUE}
+set.seed(1)
+nn <- neuralnet::neuralnet(f, data = train %>% sample_frac(0.1), 
+                           hidden = 3, linear.output = F)
+plot(nn)
+```
+
+## Testing
+
+Most models in R have a `predict` function which generates predictions given a model and a new dataset. The `prediction` function in `neuralnet` is not that. I don't know what it is. 
+
+Here, we want to use the `compute` function instead. Note that we run `compute` on the testing dataset, with the `y` response variable excluded. I don't think the function checks for column names, it just does matrix multiplication with whatever you give it, so you must make sure your training and testing data is properly aligned.
+
+```{r}
+preds <- neuralnet::compute(nn, MNIST::mnist_test[, 1:784])
+```
+
+I don't really understand the rest. I *believe* each column represents a possible outcome, e.g. digit from 0-9, and each row represents the prediction value for each particular instance.
+
+```{r}
+preds$net.result %>% dim
+```
+
+The rowsums are almost all 1, which fits this assumption.
+
+```{r}
+preds$net.result %>% rowsum() %>% hist
+```
+
+
+This would mean that each observation is classified by whatever the largest class probability is. We can do some R magic to find which class has the highest probability for each observation; here, we show the distribution.
+
+```{r}
+apply(preds$net.result, MARGIN = 1, which.max) %>% table
+```
+
+Which is, quite obviously, very different from the values that we actually see.
+
+```{r}
+table(MNIST::mnist_train$y)
+```
+
