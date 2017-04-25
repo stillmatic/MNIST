@@ -110,9 +110,8 @@ preds$net.result %>% dim
 The rowsums are almost all 1, which fits this assumption.
 
 ```{r}
-preds$net.result %>% rowsum() %>% hist
+apply(preds$net.result, MARGIN = 1, sum) %>% hist
 ```
-
 
 This would mean that each observation is classified by whatever the largest class probability is. We can do some R magic to find which class has the highest probability for each observation; here, we show the distribution.
 
@@ -123,6 +122,6 @@ apply(preds$net.result, MARGIN = 1, which.max) %>% table
 Which is, quite obviously, very different from the values that we actually see.
 
 ```{r}
-table(MNIST::mnist_train$y)
+table(MNIST::mnist_test$y)
 ```
 

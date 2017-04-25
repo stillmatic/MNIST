@@ -7,3 +7,8 @@
 # RStudio files
 .Rproj.user/
 inst/doc
+
+*.rdb
+*.Rdata
+*.rdx
+
