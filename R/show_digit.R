@@ -12,8 +12,8 @@
 #' @md
 #'
 #' @examples
-#' show_digit(MNIST::mnist_train$x[30,])
-#' show_digit(MNIST::mnist_train$x[30,], sq = 1)
+#' show_digit(MNIST::mnist_train[30,])
+#' show_digit(MNIST::mnist_train[42,])
 show_digit <- function(arr784, col=gray(12:1/12), ...) {
     base_par <- par(pty = "s", no.readonly = T)
     arr784 <- unlist(arr784[1:784])

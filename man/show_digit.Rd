@@ -17,6 +17,6 @@ show_digit(arr784, col = gray(12:1/12), ...)
 Works by default for the MNIST objects as established here.
 }
 \examples{
-show_digit(MNIST::mnist_train$x[30,])
-show_digit(MNIST::mnist_train$x[30,], asp = 1)
+show_digit(MNIST::mnist_train[30,])
+show_digit(MNIST::mnist_train[42,])
 }

@@ -110,7 +110,7 @@ for (i in <span class="dv">1</span>:<span class="dv">1000</span>) {
 accuracy &lt;-<span class="st"> </span>tf$<span class="kw">reduce_mean</span>(tf$<span class="kw">cast</span>(correct_prediction, tf$float32))
 sess$<span class="kw">run</span>(accuracy,
          <span class="dt">feed_dict =</span> <span class="kw">dict</span>(<span class="dt">x =</span> mnist$test$images, <span class="dt">y_ =</span> mnist$test$labels))</code></pre></div>
-<pre><code>## [1] 0.918</code></pre>
+<pre><code>## [1] 0.9215</code></pre>
 </div>
 </div>
   </div>

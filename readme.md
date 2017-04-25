@@ -4,6 +4,8 @@ MNIST Image Data
 
 Chris Hua / `chua@wharton.upenn.edu`
 
+Produces the MNIST image recognition data as dataframes in R. Look at the vignettes for examples of how to work with the MNIST data, using `tensorflow` and `neuralnet` packages.
+
 Installation
 ------------
 
